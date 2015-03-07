@@ -10,13 +10,16 @@
 
 - [Scala基础练习](./exercise-scala-basic)
 - [A Scala Tutorial for Java Programmers 笔记](./A-Scala-Tutorial-for-Java-Programmers-notes.md)
+- [sbt学习笔记](./sbt.md)
 
-## TODO
+## 任务
 
 | 任务 | 开始日期 | 结束日期 | 进度 |
 | --- | ---- | --- | --- |
 | A Scala Tutorial for Java Programmers | 3/7 | 3/7 | 100% |
+| A tour of Scala | 3/8 | - | 0% |
 
 ## 参考资料
 
 - [A Scala Tutorial for Java Programmers](http://www.scala-lang.org/documentation/)
+- [A tour of scala](http://docs.scala-lang.org/tutorials/tour/tour-of-scala.html)
