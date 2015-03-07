@@ -9,12 +9,13 @@
 ## 内容
 
 - [Scala基础练习](./exercise-scala-basic)
+- [A Scala Tutorial for Java Programmers 笔记](./A-Scala-Tutorial-for-Java-Programmers-notes.md)
 
 ## TODO
 
 | 任务 | 开始日期 | 结束日期 | 进度 |
 | --- | ---- | --- | --- |
-| A Scala Tutorial for Java Programmers | 3/7 | - | 0% |
+| A Scala Tutorial for Java Programmers | 3/7 | 3/7 | 100% |
 
 ## 参考资料
 
