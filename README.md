@@ -6,4 +6,4 @@
 
 ## 内容
 
-- - [Scala练习](./exercise-scala)
+- [Scala练习](./exercise-scala)
