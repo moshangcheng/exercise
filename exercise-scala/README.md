@@ -4,6 +4,8 @@
 
 项目使用`sbt`管理，包含多个子工程，使用`scalatest`进行单元测试，使用`sbt-assembly` 进行打包，使用`sbt-eclipse`生成eclispe工程。
 
+项目使用[Scala-ide](http://scala-ide.org/)作为开发工具。
+
 ## 内容
 
 - [Scala基础练习](./exercise-scala-basic)
