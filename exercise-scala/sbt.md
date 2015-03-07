@@ -1,4 +1,4 @@
-[Scala学习笔记](http://www.scala-sbt.org/0.13/tutorial/zh-cn/index.html)
+# [Scala 学习笔记](http://www.scala-sbt.org/0.13/tutorial/zh-cn/index.html)
 
 ## 安装
 
