@@ -14,6 +14,8 @@
 
 ## 内容
 
+- [Spark基础练习](./exercise-spark-basic)
+
 ## 任务
 
 

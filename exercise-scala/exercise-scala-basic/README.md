@@ -9,6 +9,6 @@
 - HelloWorld: `me.shu.exercise.scala.basic.HelloWorld`
 - scalatest的使用样例： `me.shu.exercise.scala.basic.BasicTest`
 
-## TODO
+## 任务
 
-## 参考文档
+## 参考资料
