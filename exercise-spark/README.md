@@ -15,7 +15,7 @@
 ## 内容
 
 - [Spark基础练习](./exercise-spark-basic)
-- [Spark Programming Guide笔记](./spark-programming-guide-notes.md)
+- [Spark Programming Guide笔记](./Spark-Programming-Guide-notes.md)
 
 ## 任务
 
