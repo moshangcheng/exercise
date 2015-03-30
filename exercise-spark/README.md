@@ -30,3 +30,4 @@
 - [spark在哪里指定master URL](http://www.zhihu.com/question/23967309)
 - [Spark examples](https://spark.apache.org/examples.html)
 - [Spark Programming Guide](https://spark.apache.org/docs/latest/programming-guide.html)
+- [spark八法之方圆:RDD](https://github.com/shijinkui/spark_study/blob/master/spark_eight_style_rdd.markdown)

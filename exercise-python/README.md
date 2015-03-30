@@ -23,15 +23,19 @@
 - [Fabric](http://www.fabfile.org/)：用于远程执行命令
 	- Windows：Fabric依赖于PyCrypto，需要首先[下载PyCrypto](http://www.voidspace.org.uk/python/modules.shtml#pycrypto)，安装后再执行`pip install fabric`
 	- Linux：执行`pip install fabric`
+- [matplotlib](http://matplotlib.org/):python的绘图库
+	- 安装: `pip install matplotlib`
 
 ## 任务
 
 | 任务 | 开始日期 | 结束日期 | 进度 |
 | --- | ---- | --- | --- |
 | 学习IPython | - | - | 0% |
+| 学习用Python做科学计算| - | - | 0% |
 
 ## 参考资料
 
 - [IPython Documentation](http://ipython.org/ipython-doc/3/index.html)
 - [IPython Tutorial](http://ipython.org/ipython-doc/stable/interactive/tutorial.html)
 - [The IPython notebook](http://ipython.org/ipython-doc/stable/notebook/index.html)
+- [用Python做科学计算](http://sebug.net/paper/books/scipydoc/index.html)
