@@ -6,6 +6,8 @@
 
 ## 内容
 
+推荐使用[*Anaconda*](https://store.continuum.io/cshop/anaconda/)等Python第三方发行版
+
 ### 使用的第三方包
 
 - [pip](https://pip.pypa.io/en/stable/)：Python的包管理工具
@@ -25,6 +27,10 @@
 	- Linux：执行`pip install fabric`
 - [matplotlib](http://matplotlib.org/):python的绘图库
 	- 安装: `pip install matplotlib`
+- [vincent](https://github.com/wrobstory/vincent)：Python的Vega生成器
+	- 安装：`pip install vincent`
+- [python-nvd3](https://github.com/areski/python-nvd3)：Python的[nvd3](https://github.com/novus/nvd3)封装
+	- 安装：`pip install python-nvd3`
 
 ## 任务
 
@@ -39,3 +45,5 @@
 - [IPython Tutorial](http://ipython.org/ipython-doc/stable/interactive/tutorial.html)
 - [The IPython notebook](http://ipython.org/ipython-doc/stable/notebook/index.html)
 - [用Python做科学计算](http://sebug.net/paper/books/scipydoc/index.html)
+- [Overview of Python Visualization Tools](http://pbpython.com/visualization-tools-1.html)
+- [Python的机器学习库scikit-learn](http://scikit-learn.org/stable/index.html)

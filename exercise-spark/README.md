@@ -31,3 +31,5 @@
 - [Spark examples](https://spark.apache.org/examples.html)
 - [Spark Programming Guide](https://spark.apache.org/docs/latest/programming-guide.html)
 - [spark八法之方圆:RDD](https://github.com/shijinkui/spark_study/blob/master/spark_eight_style_rdd.markdown)
+- [pyspark原理简介](http://blog.csdn.net/pelick/article/details/38307631)
+- [How-to: Use IPython Notebook with Apache Spark](http://blog.cloudera.com/blog/2014/08/how-to-use-ipython-notebook-with-apache-spark/)
