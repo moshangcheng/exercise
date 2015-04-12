@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "me.shu.exercise.spark",
   version := "0.1.0",
-  scalaVersion := "2.10.4",
+  scalaVersion := "2.10.5",
   libraryDependencies += "org.apache.spark" % "spark-core_2.10" % "1.3.0",
   libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.2.2" % "test"
 )

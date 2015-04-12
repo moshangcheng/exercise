@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "me.shu.exercise.scala",
   version := "0.1.0",
-  scalaVersion := "2.10.4",
+  scalaVersion := "2.10.5",
   libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.1",
   libraryDependencies += "com.github.t3hnar" %% "scalax" % "2.5",
   libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2" % "test"
