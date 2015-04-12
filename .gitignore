@@ -3,3 +3,5 @@ target/
 .classpath
 .settings/
 .cache
+.idea
+.idea_modules

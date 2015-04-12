@@ -1,7 +1,10 @@
 lazy val commonSettings = Seq(
   organization := "me.shu.exercise.scala",
   version := "0.1.0",
-  scalaVersion := "2.10.4"
+  scalaVersion := "2.10.4",
+  libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.1",
+  libraryDependencies += "com.github.t3hnar" %% "scalax" % "2.5",
+  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2" % "test"
 )
 
 lazy val exerciseScala = (project in file(".")).
@@ -14,7 +17,6 @@ lazy val exerciseScala = (project in file(".")).
 lazy val exerciseScalaBasic = (project in file("exercise-scala-basic")).
   settings(commonSettings: _*).
   settings(
-    name := "exercise-scala-basic",
-	libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.2.2" % "test"
+    name := "exercise-scala-basic"
   )
 
