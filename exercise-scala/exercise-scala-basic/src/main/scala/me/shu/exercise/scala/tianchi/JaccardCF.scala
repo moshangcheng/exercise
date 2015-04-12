@@ -1,5 +1,7 @@
 package me.shu.exercise.scala.tianchi
 
+import java.io.{File, PrintWriter}
+
 import scala.io.Source
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
@@ -11,7 +13,8 @@ object JaccardCF {
 
   def main(args: Array[String]) {
 
-    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user.csv").getLines()
+    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines()
+    val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
     userData.drop(1)
 
@@ -68,6 +71,7 @@ object JaccardCF {
     //    println(userSimilarity.foldLeft(0)((sum, u) => sum + u._2.size))
 
     val p = (0 until userDict.size) flatMap { u =>
+      val totalSimilarity = userSimilarity(u).foldLeft(0.0)(_ + _._2)
       val sum = Map[Int, Double]()
       userSimilarity(u) foreach { v =>
         userSimilarity(v._1) foreach { i =>
@@ -79,12 +83,11 @@ object JaccardCF {
         }
       }
       sum filter { i => !userFeatures(u).contains(i._1)} map { i =>
-        (userDict(u), itemDict(i._1), i._2)
+        (userDict(u), itemDict(i._1), i._2 / totalSimilarity)
       }
-    } sortBy (_._3) take 5000
+    } sortBy (-_._3)
 
-    println("user_id,item_id")
-    p foreach { x => println(x._1 + "," + x._2)}
-    println
+    output.println("user_id,item_id")
+    p foreach { x => output.println(x._1 + "," + x._2)}
   }
 }
