@@ -20,7 +20,7 @@ object UserDataSplitter {
       if (tokens(5).split(" ")(0).compareTo("2014-12-18") < 0) {
         output29.println(line)
       } else if (tokens(2).toInt == 4) {
-        output1.println(tokens(0) + "," + tokens(1))
+        output1.println(line)
       }
     }
 

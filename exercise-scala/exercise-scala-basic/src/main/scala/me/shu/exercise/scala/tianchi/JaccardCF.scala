@@ -74,11 +74,11 @@ object JaccardCF {
       val totalSimilarity = userSimilarity(u).foldLeft(0.0)(_ + _._2)
       val sum = Map[Int, Double]()
       userSimilarity(u) foreach { v =>
-        userSimilarity(v._1) foreach { i =>
-          if (sum.contains(i._1)) {
-            sum(i._1) = sum(i._1) + i._2 * v._2
+        userFeatures(v._1) foreach { i =>
+          if (sum.contains(i)) {
+            sum(i) = sum(i) + v._2
           } else {
-            sum(i._1) = i._2 * v._2
+            sum(i) = v._2
           }
         }
       }
@@ -87,7 +87,8 @@ object JaccardCF {
       }
     } sortBy (-_._3)
 
-    output.println("user_id,item_id")
-    p foreach { x => output.println(x._1 + "," + x._2)}
+    output.println("user_id,item_id,score")
+    p foreach { x => output.println(x._1 + "," + x._2 + "," + x._3)}
+    output.close()
   }
 }
