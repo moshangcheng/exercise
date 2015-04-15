@@ -7,7 +7,7 @@ object UserDataSplitter {
 
   def main(args: Array[String]) {
 
-    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user.csv").getLines()
+    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\uniq-sort-user.csv").getLines()
     val output29 = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\user-29.csv"))
     val output1 = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\buy-1.csv"))
 
