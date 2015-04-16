@@ -13,78 +13,93 @@ object LR {
     var itemDict = Map[Int, String]()
     var itemReverseDict = Map[String, Int]()
 
-    // build user dictionary and item dictionary
-    Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines drop 1 foreach { x =>
-      val tokens = x.split(",")
-      if (!userReverseDict.contains(tokens(0))) {
-        userReverseDict += tokens(0) -> userReverseDict.size
-        userDict += userDict.size -> tokens(0)
-      }
-      if (!itemReverseDict.contains(tokens(1))) {
-        itemReverseDict += tokens(1) -> itemReverseDict.size
-        itemDict += itemDict.size -> tokens(1)
-      }
-    }
+    var userActions = Map[Int, Map[Int, String]]()
+    var prevTime = ""
 
-    var positiveExamples = MutableList[String]()
-    var negativeExamples = MutableList[String]()
+    var positiveExampleCount = 0
+    var negativeExampleCount = 0
+    var removedActionCount = 0
+    var ignoredActionCount = 0
 
-    // actions of different user are not related, so let's divide user to different groups
-    // and analyze actions of users in each small group to reduce memory consumption in each iteration
-    val PARTITION_SIZE = 1000
-    (0 until userDict.size / PARTITION_SIZE) foreach { group =>
+    val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines drop 1 // take 10 * 1000
+    lines flatMap { line =>
 
-      val minUserIndex = group * PARTITION_SIZE
-      val maxUserIndex = (group + 1) * PARTITION_SIZE
+      var localLRExamples = MutableList[(Int, String)]()
 
-      var userActions = Map[Int, Map[Int, String]]()
+      val tokens = line.split(",")
 
-      Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines drop 1 take 1000 * 1000 foreach { line =>
-        val tokens = line.split(",")
-        val userIndex = userReverseDict(tokens(0))
-        if (userIndex >= minUserIndex || userIndex < maxUserIndex) {
-          if (!userActions.contains(userIndex)) {
-            userActions += userIndex -> Map[Int, String]()
-          }
-          val itemIndex = itemReverseDict(tokens(1))
-          if (!userActions(userIndex).contains(itemIndex)) {
-            userActions(userIndex) += itemIndex -> line
-          }
-          else {
-            val prevAction = userActions(userIndex)(itemIndex).split(",")
-            val currentActionType = tokens(2).toInt
-            if (currentActionType == 4) {
-              // TODO add positive example
-              positiveExamples += line
-            } else {
-              // no action after viewing this item
-              if (prevAction(2) == 1 && prevAction(5).compare(tokens(5)) != 0) {
-                // TODO add negative example
-                negativeExamples += userActions(userIndex)(itemIndex)
-              }
-              // override previouse action if current action is more important
-              if (currentActionType >= prevAction(2).toInt) {
-                userActions(userIndex)(itemIndex) = line
-              }
+      if (line.compare("LAST-LINE") == 0 || (!prevTime.isEmpty && tokens(5).compare(prevTime) != 0)) {
+        userActions foreach { user =>
+          user._2 foreach { action =>
+            if (action._2.split(",")(2).toInt == 1) {
+              // TODO add negative example
+              localLRExamples += ((-1, action._2))
+              user._2 -= action._1
             }
           }
         }
       }
 
-      userActions foreach { user =>
-        user._2 foreach { action =>
-          if (action._2.split(",")(2).toInt == 1) {
-            // TODO add negative example
-            negativeExamples += action._2
+      if (line.compare("LAST-LINE") == 0) {
+        println("parse last line")
+      } else {
+        prevTime = tokens(5)
+        if (!userReverseDict.contains(tokens(0))) {
+          userReverseDict += tokens(0) -> userReverseDict.size
+          userDict += userDict.size -> tokens(0)
+        }
+        if (!itemReverseDict.contains(tokens(1))) {
+          itemReverseDict += tokens(1) -> itemReverseDict.size
+          itemDict += itemDict.size -> tokens(1)
+        }
+
+        val currentActionType = tokens(2).toInt
+
+        val userIndex = userReverseDict(tokens(0))
+        if (!userActions.contains(userIndex)) {
+          userActions += userIndex -> Map[Int, String]()
+        }
+
+        val itemIndex = itemReverseDict(tokens(1))
+        if (!userActions(userIndex).contains(itemIndex)) {
+          if (currentActionType == 4) {
+            // TODO add positive example
+            localLRExamples += ((1, line))
+          } else {
+            userActions(userIndex) += itemIndex -> line
+          }
+        }
+        else {
+          val prevAction = userActions(userIndex)(itemIndex).split(",")
+          if (currentActionType == 4) {
+            // TODO add positive example
+            localLRExamples += ((1, line))
+            userActions(userIndex) -= itemIndex
+            removedActionCount += 1
+          } else if (currentActionType >= prevAction(2).toInt) {
+            userActions(userIndex)(itemIndex) = line
+            // some click actions occurred at different locations are overrided
+            removedActionCount += 1
+          } else {
+            ignoredActionCount += 1
           }
         }
       }
-
-      userActions clear
+      localLRExamples
+    } foreach { example =>
+      if (example._1 == 1) {
+        positiveExampleCount += 1
+      } else {
+        negativeExampleCount += 1
+      }
     }
 
-    println(positiveExamples.count(x => true))
-    println(negativeExamples.count(x => true))
+    println("remained action count: " + userActions.foldLeft(0)((sum, user) => sum + user._2.size))
+    println("ignored action count: " + ignoredActionCount)
+    println("overrided action count: " + removedActionCount)
+    println("positive action count: " + positiveExampleCount)
+    println("negative action count: " + negativeExampleCount)
+
   }
 
 }
