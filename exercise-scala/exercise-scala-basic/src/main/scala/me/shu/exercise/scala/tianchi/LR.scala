@@ -1,7 +1,8 @@
 package me.shu.exercise.scala.tianchi
 
-import scala.collection.mutable.Map
-import scala.collection.mutable.MutableList
+import java.io.{File, PrintWriter}
+
+import scala.collection.mutable.{Map, MutableList}
 import scala.io.Source
 
 object LR {
@@ -100,6 +101,15 @@ object LR {
     println("positive action count: " + positiveExampleCount)
     println("negative action count: " + negativeExampleCount)
 
+    val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
+
+    output.println("user_id,item_id,score")
+    userActions foreach { user =>
+      user._2 foreach { action =>
+        output.println(userDict(user._1) + "," + itemDict(action._1))
+      }
+    }
+    output.close()
   }
 
 }

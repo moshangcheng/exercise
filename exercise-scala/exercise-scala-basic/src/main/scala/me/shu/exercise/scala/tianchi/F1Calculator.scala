@@ -18,13 +18,15 @@ object F1Calculator {
     val intersectSet = result.intersect(baseline)
     val unionSet = result.union(baseline)
 
-    val precision = intersectSet.size / result.size
-    val recall = intersectSet.size / unionSet.size
-    val f1 = 2 * precision * recall / (precision + recall)
+    val precision = 1.0 * intersectSet.size / result.size
+    val recall = 1.0 * intersectSet.size / baseline.size
+    val f1 = 2.0 * precision * recall / (precision + recall)
 
-    println("precision: " + precision)
-    println("recall: " + recall)
-    println("f1: " + f1)
+    print("intersection set size:" + intersectSet.size)
+    println(", union set size:" + unionSet.size)
+    print("precision: " + precision)
+    print(", recall: " + recall)
+    println(", f1: " + f1)
   }
 
 }
