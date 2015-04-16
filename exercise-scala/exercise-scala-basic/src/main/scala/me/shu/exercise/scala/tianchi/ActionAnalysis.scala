@@ -6,7 +6,7 @@ object ActionAnalysis {
 
   def main(args: Array[String]) {
 
-    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines()
+    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-29.csv").getLines()
 
     userData.drop(1)
 

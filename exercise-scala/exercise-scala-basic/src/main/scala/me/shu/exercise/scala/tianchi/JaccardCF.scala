@@ -13,7 +13,7 @@ object JaccardCF {
 
   def main(args: Array[String]) {
 
-    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines()
+    val userData = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-29.csv").getLines()
     val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
     userData.drop(1)

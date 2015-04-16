@@ -22,7 +22,7 @@ object LR {
     var removedActionCount = 0
     var ignoredActionCount = 0
 
-    val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\user-29.csv").getLines drop 1 // take 10 * 1000
+    val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-30.csv").getLines drop 1 // take 10 * 1000
     lines flatMap { line =>
 
       var localLRExamples = MutableList[(Int, String)]()
