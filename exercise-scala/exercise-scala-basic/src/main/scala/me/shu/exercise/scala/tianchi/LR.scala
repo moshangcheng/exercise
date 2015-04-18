@@ -4,17 +4,51 @@ import java.io.{File, PrintWriter}
 
 import scala.collection.mutable.{Map, MutableList}
 import scala.io.Source
+import scala.util.Random
 
 object LR {
 
   def main(args: Array[String]): Unit = {
+
+    var exampleRation = 0.1
+    var featureRatio = 0.1
+
+    val baseFeature = (user: Int, action: (Int, (Int, Int))) => {
+      MutableList[String]("item.id:" + action._1, "item.cat:" + action._2._2, "user.id:" + user)
+    }
+
+    val relationFeature = (action: (Int, (Int, Int)), valueableAction: (Int, Int, Int)) => {
+      MutableList[String](
+        (valueableAction._2 + ":item.id*item.id:" + {
+          if (action._1 >= valueableAction._1) {
+            valueableAction._1 + "*" + action._1
+          } else {
+            action._1 + "*" + valueableAction._1
+          }
+        })
+        , (valueableAction._2 + ":item.cat*item.cat:" + {
+          if (action._2._2 >= valueableAction._3) {
+            valueableAction._3 + "*" + action._2._2
+          } else {
+            action._2._2 + "*" + valueableAction._3
+          }
+        })
+      )
+    }
+
+    val filterFeature = (feature: String, features: Map[String, Double]) => {
+      features.contains(feature) || (Random.nextDouble() < featureRatio && (features += feature -> 0.0) != null)
+    }
 
     var userDict = Map[Int, String]()
     var userReverseDict = Map[String, Int]()
     var itemDict = Map[Int, String]()
     var itemReverseDict = Map[String, Int]()
 
-    var userActions = Map[Int, Map[Int, String]]()
+    var actions = Map[Int, Map[Int, (Int, Int)]]()
+    var features = Map[String, Double]()
+    var valuableActions = Map[Int, MutableList[(Int, Int, Int)]]()
+
     var prevTime = ""
 
     var positiveExampleCount = 0
@@ -22,19 +56,27 @@ object LR {
     var removedActionCount = 0
     var ignoredActionCount = 0
 
-    val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-30.csv").getLines drop 1 // take 10 * 1000
+    val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-29.csv").getLines drop 1 // take 10 * 1000
     lines flatMap { line =>
 
-      var localLRExamples = MutableList[(Int, String)]()
+      var localLRExamples = MutableList[(Int, MutableList[String])]()
 
       val tokens = line.split(",")
 
+      // at a new time now, clear clicking actions in the previous hour
       if (line.compare("LAST-LINE") == 0 || (!prevTime.isEmpty && tokens(5).compare(prevTime) != 0)) {
-        userActions foreach { user =>
+        actions foreach { user =>
           user._2 foreach { action =>
-            if (action._2.split(",")(2).toInt == 1) {
-              // TODO add negative example
-              localLRExamples += ((-1, action._2))
+            if (action._2._1 == 1) {
+              // add negative example
+              if (Random.nextDouble() < exampleRation) {
+                localLRExamples += ((-1, {
+                  // extract feature
+                  var exampleFeature = valuableActions(user._1) flatMap (relationFeature(action, _))
+                  exampleFeature ++= baseFeature(user._1, action)
+                  exampleFeature filter (filterFeature(_, features))
+                }))
+              }
               user._2 -= action._1
             }
           }
@@ -46,6 +88,7 @@ object LR {
       } else {
         prevTime = tokens(5)
         if (!userReverseDict.contains(tokens(0))) {
+          valuableActions += userReverseDict.size -> MutableList[(Int, Int, Int)]()
           userReverseDict += tokens(0) -> userReverseDict.size
           userDict += userDict.size -> tokens(0)
         }
@@ -54,34 +97,51 @@ object LR {
           itemDict += itemDict.size -> tokens(1)
         }
 
-        val currentActionType = tokens(2).toInt
-
         val userIndex = userReverseDict(tokens(0))
-        if (!userActions.contains(userIndex)) {
-          userActions += userIndex -> Map[Int, String]()
+        if (!actions.contains(userIndex)) {
+          actions += userIndex -> Map[Int, (Int, Int)]()
         }
 
-        val itemIndex = itemReverseDict(tokens(1))
-        if (!userActions(userIndex).contains(itemIndex)) {
-          if (currentActionType == 4) {
-            // TODO add positive example
-            localLRExamples += ((1, line))
+        val action = (itemReverseDict(tokens(1)), (tokens(2).toInt, tokens(4).toInt))
+        if (action._2._1 != 1) {
+          valuableActions(userIndex) += ((action._1, action._2._1, action._2._2))
+        }
+
+        if (!actions(userIndex).contains(action._1)) {
+          if (action._2._1 == 4) {
+            // add positive example
+            localLRExamples += ((1, {
+              // extract feature
+              var exampleFeature = valuableActions(userIndex) flatMap (relationFeature(action, _))
+              exampleFeature ++= baseFeature(userIndex, action)
+              exampleFeature filter (filterFeature(_, features))
+            }))
           } else {
-            userActions(userIndex) += itemIndex -> line
+            actions(userIndex) += action
           }
         }
         else {
-          val prevAction = userActions(userIndex)(itemIndex).split(",")
-          if (currentActionType == 4) {
-            // TODO add positive example
-            localLRExamples += ((1, line))
-            userActions(userIndex) -= itemIndex
+          val prevAction = actions(userIndex)(action._1)
+          if (action._2._1 == 4) {
+            // add positive example
+            localLRExamples += ((1, {
+              // extract feature
+              var exampleFeature = valuableActions(userIndex) flatMap (relationFeature(action, _))
+              if (prevAction._1 > 1) {
+                // TODO add action interval as feature
+                //exampleFeature += ""
+              }
+              exampleFeature ++= baseFeature(userIndex, action)
+              exampleFeature filter (filterFeature(_, features))
+            }))
+            actions(userIndex) -= action._1
             removedActionCount += 1
-          } else if (currentActionType >= prevAction(2).toInt) {
-            userActions(userIndex)(itemIndex) = line
+          } else if (action._2._1 >= prevAction._1) {
+            actions(userIndex) += action
             // some click actions occurred at different locations are overrided
             removedActionCount += 1
           } else {
+            // TODO add negative example
             ignoredActionCount += 1
           }
         }
@@ -95,16 +155,17 @@ object LR {
       }
     }
 
-    println("remained action count: " + userActions.foldLeft(0)((sum, user) => sum + user._2.size))
+    println("remained action count: " + actions.foldLeft(0)((sum, user) => sum + user._2.size))
     println("ignored action count: " + ignoredActionCount)
     println("overrided action count: " + removedActionCount)
     println("positive action count: " + positiveExampleCount)
     println("negative action count: " + negativeExampleCount)
+    println("feature count: " + features.size)
 
     val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
     output.println("user_id,item_id,score")
-    userActions foreach { user =>
+    actions foreach { user =>
       user._2 foreach { action =>
         output.println(userDict(user._1) + "," + itemDict(action._1))
       }
