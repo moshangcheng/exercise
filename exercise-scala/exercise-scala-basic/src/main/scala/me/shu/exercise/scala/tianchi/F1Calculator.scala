@@ -6,10 +6,14 @@ object F1Calculator {
 
   def main(args: Array[String]): Unit = {
 
+    val candidates = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\item.csv").getLines drop 1 map { line =>
+      line.split(",")(0)
+    } toSet
+
     val baseline = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\buy-1.csv").getLines() drop (1) map { line =>
       val tokens = line.split(",")
       tokens(0) + "," + tokens(1)
-    } toSet
+    } filter (action => candidates.contains(action.split(",")(1))) toSet
     val result = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\my.csv").getLines().drop(1) map { line =>
       val tokens = line.split(",")
       tokens(0) + "," + tokens(1)
