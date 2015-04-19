@@ -149,7 +149,7 @@ object LR {
             // add positive example
             localLRExamples += ((1, {
               // extract feature
-              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).flatMap(relationFeature(action, _))
+              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).view.flatMap(relationFeature(action, _))
               exampleFeature.filter(filterFeature(_)).map(featureDict)
             }))
           } else {
@@ -162,7 +162,7 @@ object LR {
             // add positive example
             localLRExamples += ((1, {
               // extract feature
-              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).flatMap(relationFeature(action, _))
+              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).view.flatMap(relationFeature(action, _))
               if (prevAction._1 > 1) {
                 // TODO add action interval as feature
                 exampleFeature ++= intervalFeature(userID, action._2._3, (action._1, prevAction))
@@ -180,7 +180,7 @@ object LR {
             ignoredActionCount += 1
           }
         }
-        if (action._2._1 != 1) {
+        if (action._2._1 == 4) {
           valuableActions(userID) += ((action._1, action._2._1, action._2._2, action._2._3))
         }
 
@@ -236,8 +236,8 @@ object LR {
       val userID = user._1
       user._2.view.filter(action => candidates.contains(action._1)) map { action =>
         (user._1, action._1, {
-          val candidateFeature = baseFeature(userID, action) ++ actions(userID).flatMap { otherAction =>
-            relationFeature(action, (otherAction._1, otherAction._2._1, otherAction._2._2, otherAction._2._3))
+          val candidateFeature = baseFeature(userID, action) ++ valuableActions(userID).flatMap { otherAction =>
+            relationFeature(action, otherAction)
           } ++ intervalFeature(userID, 30, action)
           candidateFeature.foldLeft(0.0) { (acc, dim) =>
             if (featureDict.contains(dim)) {
