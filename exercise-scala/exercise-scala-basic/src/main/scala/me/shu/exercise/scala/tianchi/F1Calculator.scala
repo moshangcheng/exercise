@@ -1,6 +1,7 @@
 package me.shu.exercise.scala.tianchi
 
 import scala.io.Source
+import scala.collection.mutable.Set
 
 object F1Calculator {
 
@@ -14,23 +15,40 @@ object F1Calculator {
       val tokens = line.split(",")
       tokens(0) + "," + tokens(1)
     } filter (action => candidates.contains(action.split(",")(1))) toSet
-    val result = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\my.csv").getLines().drop(1) map { line =>
+
+    var lineIndex = 1
+
+    var joinSetSize = 0
+    var unionSetSize = 0
+
+    var bestF1 = 0.0
+    var info = ""
+
+    Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\my.csv").getLines().drop(1) foreach { line =>
+
       val tokens = line.split(",")
-      tokens(0) + "," + tokens(1)
-    } toSet
+      val record = tokens(0) + "," + tokens(1)
 
-    val intersectSet = result.intersect(baseline)
-    val unionSet = result.union(baseline)
+      lineIndex += 1
 
-    val precision = 1.0 * intersectSet.size / result.size
-    val recall = 1.0 * intersectSet.size / baseline.size
-    val f1 = 2.0 * precision * recall / (precision + recall)
+      if (baseline.contains(record)) {
+        joinSetSize += 1
+      }
+      unionSetSize += 1
 
-    print("intersection set size:" + intersectSet.size)
-    println(", union set size:" + unionSet.size)
-    print("precision: " + precision)
-    print(", recall: " + recall)
-    println(", f1: " + f1)
+      val precision = 1.0 * joinSetSize / unionSetSize
+      val recall = 1.0 * joinSetSize / baseline.size
+      val f1 = 2.0 * precision * recall / (precision + recall)
+      val currentInfo = joinSetSize + "-" + lineIndex + ": precision-" + precision + ", recall-" + recall + ", f1-" + f1
+
+      if (f1 > bestF1) {
+        bestF1 = f1
+        info = currentInfo
+      }
+      println(currentInfo)
+    }
+    println("total buy-action count: " + baseline.size)
+    println(info)
   }
 
 }

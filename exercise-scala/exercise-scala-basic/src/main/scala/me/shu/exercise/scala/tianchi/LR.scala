@@ -9,13 +9,13 @@ import scala.util.Random
 
 object LR {
 
-  private val exampleRatio = 0.1
-  private val featureRatio = 0.001
+  private val exampleRatio = 0.025
+  private val featureRatio = 0.0025
 
-  private val alpha = 2.0
+  private val alpha = 5
   private val beta = 1.0
-  private val lambda1 = 1.0e-5
-  private val lambda2 = 0.2
+  private val lambda1 = 0.5
+  private val lambda2 = 0.5
 
   private val userDict = Map[Int, String]()
   private val userReverseDict = Map[String, Int]()
@@ -250,10 +250,10 @@ object LR {
       }
     } toList
 
-    val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my-all.csv"))
+    val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
-    output.println("user_id,item_id,score")
-    result.sortBy(-_._3).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2) + "," + x._3)}
+    output.println("user_id,item_id")
+    result.sortBy(-_._3).take(2000).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2))}
     output.close()
   }
 
