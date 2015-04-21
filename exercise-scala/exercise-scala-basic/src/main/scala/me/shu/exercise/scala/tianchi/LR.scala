@@ -2,15 +2,14 @@ package me.shu.exercise.scala.tianchi
 
 import java.io.{File, PrintWriter}
 
-import scala.collection.mutable
 import scala.collection.mutable.{Map, MutableList}
 import scala.io.Source
 import scala.util.Random
 
 object LR {
 
-  private val exampleRatio = 0.025
-  private val featureRatio = 0.0025
+  private val exampleRatio = 0.05
+  private val relFeatureRatio = 0.005
 
   private val alpha = 5
   private val beta = 1.0
@@ -22,8 +21,12 @@ object LR {
   private val itemDict = Map[Int, String]()
   private val itemReverseDict = Map[String, Int]()
 
+  // userID, itemID, actionType, itemCat, interval
   private val actions = Map[Int, Map[Int, (Int, Int, Int)]]()
   private val valuableActions = Map[Int, MutableList[(Int, Int, Int, Int)]]()
+  // not used, click action count, collect action count, add-cart action count, buy action count
+  // the sum of collect count of each buy action, the sum of add-cart count of each buy action
+  private val userStat = Map[Int, Array[Int]]()
 
   private val featureDict = Map[String, Int]()
   private val featureReverseDict = Map[Int, String]()
@@ -35,33 +38,38 @@ object LR {
 
   def main(args: Array[String]): Unit = {
 
-    val baseFeature = (userID: Int, action: (Int, (Int, Int, Int))) => {
-      MutableList[String]("item.id:" + action._1, "item.cat:" + action._2._2, "user.id:" + userID)
+    val baseFeature = (userID: Int, itemID: Int, itemCat: Int) => {
+      MutableList[String]("item.id:" + itemID, "item.cat:" + itemCat, "user.id:" + userID, "user.id*item.cat:" + userID + "*" + itemCat)
     }
 
-    val relationFeature = (action: (Int, (Int, Int, Int)), valueableAction: (Int, Int, Int, Int)) => {
+    val relationFeature = (action: (Int, (Int, Int, Int)), valuableAction: (Int, Int, Int, Int)) => {
       MutableList[String](
-        ("cf-" + valueableAction._2 + ":item.id*item.id:" + {
-          if (action._1 >= valueableAction._1) {
-            valueableAction._1 + "*" + action._1
+        ("rel@item.id*item.id:" + {
+          if (action._1 >= valuableAction._1) {
+            valuableAction._1 + "*" + action._1
           } else {
-            action._1 + "*" + valueableAction._1
+            action._1 + "*" + valuableAction._1
           }
         })
-        , ("cf-" + valueableAction._2 + ":item.cat*item.cat:" + {
-          if (action._2._2 >= valueableAction._3) {
-            valueableAction._3 + "*" + action._2._2
-          } else {
-            action._2._2 + "*" + valueableAction._3
-          }
-        })
+//        , ("rel@" + valuableAction._2 + ":item.cat*item.cat:" + {
+//          if (action._2._2 >= valuableAction._3) {
+//            valuableAction._3 + "*" + action._2._2
+//          } else {
+//            action._2._2 + "*" + valuableAction._3
+//          }
+//        })
       )
     }
 
     val filterFeature = (feature: String) => {
+      val filterRatio = if (feature.startsWith("rel@")) {
+        relFeatureRatio
+      } else {
+        1.0
+      }
       if (featureDict.contains(feature)) {
         true
-      } else if (Random.nextDouble() < featureRatio) {
+      } else if (Random.nextDouble() < filterRatio) {
         featureDict += feature -> featureDict.size
         featureReverseDict += featureReverseDict.size -> feature
         true
@@ -73,7 +81,8 @@ object LR {
     val intervalFeature = (userID: Int, currentInterval: Int, prevAction: (Int, (Int, Int, Int))) => {
       val interval = currentInterval - prevAction._2._3
       MutableList[String](
-        "t-item.id:" + interval + "-" + prevAction._1
+        "t:" + interval
+        , "t-item.id:" + interval + "-" + prevAction._1
         , "t-action.type:" + interval + "-" + prevAction._2._1
         , "t-item.cat:" + interval + "-" + prevAction._2._2
         , "t-action.type*item.cat:" + interval + "-" + prevAction._2._1 + "*" + prevAction._2._2
@@ -113,7 +122,8 @@ object LR {
               if (Random.nextDouble() < exampleRatio) {
                 localLRExamples += ((0, {
                   // extract feature
-                  val exampleFeature = baseFeature(user._1, action) ++ valuableActions(user._1).flatMap(relationFeature(action, _))
+                  val exampleFeature = baseFeature(user._1, action._1, action._2._2)
+                  exampleFeature ++= valuableActions(user._1).flatMap(relationFeature(action, _))
                   exampleFeature.filter(filterFeature(_)).map(featureDict)
                 }))
               }
@@ -129,6 +139,7 @@ object LR {
         prevTime = tokens(5)
         if (!userReverseDict.contains(tokens(0))) {
           valuableActions += userReverseDict.size -> MutableList[(Int, Int, Int, Int)]()
+          userStat += userReverseDict.size -> Array.fill(7)(0)
           userReverseDict += tokens(0) -> userReverseDict.size
           userDict += userDict.size -> tokens(0)
         }
@@ -149,7 +160,8 @@ object LR {
             // add positive example
             localLRExamples += ((1, {
               // extract feature
-              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).view.flatMap(relationFeature(action, _))
+              val exampleFeature = baseFeature(userID, action._1, action._2._2)
+              exampleFeature ++= valuableActions(userID).view.flatMap(relationFeature(action, _))
               exampleFeature.filter(filterFeature(_)).map(featureDict)
             }))
           } else {
@@ -162,9 +174,9 @@ object LR {
             // add positive example
             localLRExamples += ((1, {
               // extract feature
-              val exampleFeature = baseFeature(userID, action) ++ valuableActions(userID).view.flatMap(relationFeature(action, _))
+              val exampleFeature = baseFeature(userID, action._1, action._2._2)
+              exampleFeature ++= valuableActions(userID).view.flatMap(relationFeature(action, _))
               if (prevAction._1 > 1) {
-                // TODO add action interval as feature
                 exampleFeature ++= intervalFeature(userID, action._2._3, (action._1, prevAction))
               }
               exampleFeature.filter(filterFeature(_)).map(featureDict)
@@ -180,10 +192,13 @@ object LR {
             ignoredActionCount += 1
           }
         }
+
         if (action._2._1 == 4) {
           valuableActions(userID) += ((action._1, action._2._1, action._2._2, action._2._3))
+          userStat(userID)(5) += userStat(userID)(2)
+          userStat(userID)(6) += userStat(userID)(3)
         }
-
+        userStat(userID)(action._2._1) += 1
       }
       localLRExamples
     } foreach { example =>
@@ -198,11 +213,15 @@ object LR {
       }
 
       example._2 foreach { dim =>
+        var gti = gt
+        if (featureReverseDict(dim).startsWith("rel@")) {
+          gti = gti / relFeatureRatio
+        }
         val ftrlNi = ftrlN.getOrElse(dim, 0.0)
         val ftrlZi = ftrlZ.getOrElse(dim, 0.0)
-        val sigma = 1.0 / alpha * (math.sqrt(ftrlNi + gt * gt) - math.sqrt(ftrlNi))
-        ftrlZ(dim) = ftrlZi + gt - sigma * weights.getOrElse(dim, 0.0)
-        ftrlN(dim) = ftrlNi + gt * gt
+        val sigma = 1.0 / alpha * (math.sqrt(ftrlNi + gti * gti) - math.sqrt(ftrlNi))
+        ftrlZ(dim) = ftrlZi + gti - sigma * weights.getOrElse(dim, 0.0)
+        ftrlN(dim) = ftrlNi + gti * gti
         if (math.abs(ftrlZ(dim)) > lambda1) {
           weights(dim) = -1.0 / (lambda2 + (beta + math.sqrt(ftrlN(dim)) / alpha)) * (ftrlZ(dim) - math.signum(ftrlZ(dim)) * lambda1)
         } else {
@@ -228,32 +247,69 @@ object LR {
       + ", positive weight count: " + weights.count(w => w._2 > 0.0)
       + ", negative weight count: " + weights.count(w => w._2 < 0.0))
 
+
+    val featureOutput = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\feature.csv"))
+    //val weightsString = weights.toArray.sortBy(-_._2).view.map { w => featureReverseDict(w._1) + "," + w._2}.foreach(featureOutput.println)
+    featureOutput.close()
+
     val candidates = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\item.csv").getLines drop 1 map { line =>
       line.split(",")(0)
     } filter (itemReverseDict.contains(_)) map (itemReverseDict(_)) toSet
 
+    val hotItems = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\hot-item.csv").getLines map { line =>
+      var tokens = line.split(",")
+      (tokens(0), tokens(1).toInt)
+    } filter { hotItem =>
+      itemReverseDict.contains(hotItem._1) && candidates.contains(itemReverseDict(hotItem._1))
+    } map (hotItem => (itemReverseDict(hotItem._1), hotItem._2)) toList
+
     val result = actions flatMap { user =>
       val userID = user._1
+      val collectedItemCount = user._2.count(_._2._1 == 2)
+      val inCartItemCount = user._2.count(_._2._1 == 3)
       user._2.view.filter(action => candidates.contains(action._1)) map { action =>
         (user._1, action._1, {
-          val candidateFeature = baseFeature(userID, action) ++ valuableActions(userID).flatMap { otherAction =>
+          val candidateFeature = baseFeature(userID, action._1, action._2._2) ++ valuableActions(userID).flatMap { otherAction =>
             relationFeature(action, otherAction)
           } ++ intervalFeature(userID, 30, action)
-          candidateFeature.foldLeft(0.0) { (acc, dim) =>
+          val baseWeight = candidateFeature.foldLeft(0.0) { (acc, dim) =>
             if (featureDict.contains(dim)) {
               acc + weights.getOrElse(featureDict(dim), 0.0)
             } else {
               acc
             }
           }
+          if (action._2._1 == 2) {
+            baseWeight * userStat(userID)(2) / collectedItemCount // collectedItemCount
+          } else if (action._2._1 == 3) {
+            baseWeight * userStat(userID)(3) / inCartItemCount // inCartItemCount
+          } else {
+            baseWeight
+          }
         })
       }
     } toList
 
+    val finalResult = result ++ hotItems.flatMap { hotItem =>
+      userDict map { user => (user._1, hotItem._1, {
+        val candidateFeature = baseFeature(user._1, hotItem._1, hotItem._2) ++ valuableActions(user._1).flatMap { otherAction =>
+          relationFeature((hotItem._1, (-1, hotItem._2, -1)), otherAction)
+        }
+        candidateFeature.foldLeft(0.0) { (acc, dim) =>
+          if (featureDict.contains(dim)) {
+            acc + weights.getOrElse(featureDict(dim), 0.0)
+          } else {
+            acc
+          }
+        }
+      })
+      } toList
+    }
+
     val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
     output.println("user_id,item_id")
-    result.sortBy(-_._3).take(2000).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2))}
+    finalResult.sortBy(-_._3).take(2000).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2))}
     output.close()
   }
 
