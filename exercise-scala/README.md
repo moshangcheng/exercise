@@ -18,8 +18,15 @@
 | --- | ---- | --- | --- |
 | A Scala Tutorial for Java Programmers | 3/7 | 3/7 | 100% |
 | A tour of Scala | 3/8 | - | 0% |
+| Effective Scala | 5/23 | - | 0% |
 
 ## 参考资料
 
 - [A Scala Tutorial for Java Programmers](http://www.scala-lang.org/documentation/)
 - [A tour of scala](http://docs.scala-lang.org/tutorials/tour/tour-of-scala.html)
+- [Effective Scala](http://twitter.github.io/effectivescala/index-cn.html)
+- [Scala Style Guide](http://docs.scala-lang.org/style/)
+- [scala专栏@在路上](http://hongjiang.info/scala/)
+- [ Scala Language Specification](http://www.scala-lang.org/files/archive/spec/2.11/)
+- SCALA程序设计 JAVA虚拟机多核编程实战
+- [Scala官方文档](http://www.scala-lang.org/documentation/)
