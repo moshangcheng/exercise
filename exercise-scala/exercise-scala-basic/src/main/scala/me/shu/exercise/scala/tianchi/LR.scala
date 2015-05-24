@@ -2,7 +2,7 @@ package me.shu.exercise.scala.tianchi
 
 import java.io.{File, PrintWriter}
 
-import scala.collection.mutable.{Map, MutableList}
+import scala.collection.mutable
 import scala.io.Source
 import scala.util.Random
 
@@ -16,48 +16,48 @@ object LR {
   private val lambda1 = 0.5
   private val lambda2 = 0.5
 
-  private val userDict = Map[Int, String]()
-  private val userReverseDict = Map[String, Int]()
-  private val itemDict = Map[Int, String]()
-  private val itemReverseDict = Map[String, Int]()
+  private val userDict = mutable.Map[Int, String]()
+  private val userReverseDict = mutable.Map[String, Int]()
+  private val itemDict = mutable.Map[Int, String]()
+  private val itemReverseDict = mutable.Map[String, Int]()
 
   // userID, itemID, actionType, itemCat, interval
-  private val actions = Map[Int, Map[Int, (Int, Int, Int)]]()
-  private val valuableActions = Map[Int, MutableList[(Int, Int, Int, Int)]]()
+  private val actions = mutable.Map[Int, mutable.Map[Int, (Int, Int, Int)]]()
+  private val valuableActions = mutable.Map[Int, mutable.MutableList[(Int, Int, Int, Int)]]()
   // not used, click action count, collect action count, add-cart action count, buy action count
   // the sum of collect count of each buy action, the sum of add-cart count of each buy action
-  private val userStat = Map[Int, Array[Int]]()
+  private val userStat = mutable.Map[Int, Array[Int]]()
 
-  private val featureDict = Map[String, Int]()
-  private val featureReverseDict = Map[Int, String]()
-  private val weights = Map[Int, Double]()
+  private val featureDict = mutable.Map[String, Int]()
+  private val featureReverseDict = mutable.Map[Int, String]()
+  private val weights = mutable.Map[Int, Double]()
 
-  private val ftrlZ = Map[Int, Double]()
-  private val ftrlN = Map[Int, Double]()
+  private val ftrlZ = mutable.Map[Int, Double]()
+  private val ftrlN = mutable.Map[Int, Double]()
 
 
   def main(args: Array[String]): Unit = {
 
     val baseFeature = (userID: Int, itemID: Int, itemCat: Int) => {
-      MutableList[String]("item.id:" + itemID, "item.cat:" + itemCat, "user.id:" + userID, "user.id*item.cat:" + userID + "*" + itemCat)
+      mutable.MutableList[String]("item.id:" + itemID, "item.cat:" + itemCat, "user.id:" + userID, "user.id*item.cat:" + userID + "*" + itemCat)
     }
 
     val relationFeature = (action: (Int, (Int, Int, Int)), valuableAction: (Int, Int, Int, Int)) => {
-      MutableList[String](
-        ("rel@item.id*item.id:" + {
+      mutable.MutableList[String](
+        "rel@item.id*item.id:" + {
           if (action._1 >= valuableAction._1) {
             valuableAction._1 + "*" + action._1
           } else {
             action._1 + "*" + valuableAction._1
           }
-        })
-//        , ("rel@" + valuableAction._2 + ":item.cat*item.cat:" + {
-//          if (action._2._2 >= valuableAction._3) {
-//            valuableAction._3 + "*" + action._2._2
-//          } else {
-//            action._2._2 + "*" + valuableAction._3
-//          }
-//        })
+        }
+        //        , "rel@" + valuableAction._2 + ":item.cat*item.cat:" + {
+        //          if (action._2._2 >= valuableAction._3) {
+        //            valuableAction._3 + "*" + action._2._2
+        //          } else {
+        //            action._2._2 + "*" + valuableAction._3
+        //          }
+        //        }
       )
     }
 
@@ -80,7 +80,7 @@ object LR {
 
     val intervalFeature = (userID: Int, currentInterval: Int, prevAction: (Int, (Int, Int, Int))) => {
       val interval = currentInterval - prevAction._2._3
-      MutableList[String](
+      mutable.MutableList[String](
         "t:" + interval
         , "t-item.id:" + interval + "-" + prevAction._1
         , "t-action.type:" + interval + "-" + prevAction._2._1
@@ -109,7 +109,7 @@ object LR {
     val lines = Source.fromFile("C:\\Users\\moshangcheng\\Desktop\\action-29.csv").getLines drop 1
     lines flatMap { line =>
 
-      val localLRExamples = MutableList[(Int, MutableList[Int])]()
+      val localLRExamples = mutable.MutableList[(Int, mutable.MutableList[Int])]()
 
       val tokens = line.split(",")
 
@@ -138,7 +138,7 @@ object LR {
       } else {
         prevTime = tokens(5)
         if (!userReverseDict.contains(tokens(0))) {
-          valuableActions += userReverseDict.size -> MutableList[(Int, Int, Int, Int)]()
+          valuableActions += userReverseDict.size -> mutable.MutableList[(Int, Int, Int, Int)]()
           userStat += userReverseDict.size -> Array.fill(7)(0)
           userReverseDict += tokens(0) -> userReverseDict.size
           userDict += userDict.size -> tokens(0)
@@ -150,7 +150,7 @@ object LR {
 
         val userID = userReverseDict(tokens(0))
         if (!actions.contains(userID)) {
-          actions += userID -> Map[Int, (Int, Int, Int)]()
+          actions += userID -> mutable.Map[Int, (Int, Int, Int)]()
         }
 
         val action = (itemReverseDict(tokens(1)), (tokens(2).toInt, tokens(4).toInt, getInterval(tokens(5))))
@@ -309,7 +309,7 @@ object LR {
     val output = new PrintWriter(new File("C:\\Users\\moshangcheng\\Desktop\\my.csv"))
 
     output.println("user_id,item_id")
-    finalResult.sortBy(-_._3).take(2000).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2))}
+    finalResult.sortBy(-_._3).take(2000).foreach { x => output.println(userDict(x._1) + "," + itemDict(x._2)) }
     output.close()
   }
 
