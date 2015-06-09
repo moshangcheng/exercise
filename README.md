@@ -1,4 +1,4 @@
-# 练习
+# 代码练习
 
 ## 介绍
 
@@ -6,6 +6,11 @@
 
 ## 内容
 
+子目录
+
 - [Scala练习](./exercise-scala)
 - [Spark练习](./exercise-spark)
 - [Python练习](./exercise-python)
+- [Hadoop练习](./exercise-hadoop)
+
+## 参考资料
