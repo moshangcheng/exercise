@@ -14,11 +14,20 @@
 
 ## 内容
 
-- [Spark基础练习](./exercise-spark-basic)
+子目录
+
+- [Spark基础](./exercise-spark-basic)
+- [MLLib练习](./exercise-spark-mllib)
+- [GraphX练习](./exercise-spark-graphx)
+- [Spark Streaming练习](./exercise-spark-streaming)
+- [Spark SQL练习](./exercise-spark-sql)
+- [Spark Hive练习](./exercise-spark-hive)
+
+其它
+
 - [Spark Programming Guide笔记](./Spark-Programming-Guide-notes.md)
 
 ## 任务
-
 
 | 任务 | 开始日期 | 结束日期 | 进度 |
 | --- | ---- | --- | --- |
