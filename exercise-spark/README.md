@@ -17,6 +17,7 @@
 子目录
 
 - [Spark基础](./exercise-spark-basic)
+- [Spark工具类](./exercise-spark-util)
 - [MLLib练习](./exercise-spark-mllib)
 - [GraphX练习](./exercise-spark-graphx)
 - [Spark Streaming练习](./exercise-spark-streaming)
