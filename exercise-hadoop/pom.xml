@@ -7,11 +7,8 @@
   <packaging>pom</packaging>
   
   <properties>
-	<hadoop.version>2.7.0</hadoop.version>
-	<hive.version>2.7.0</hive.version>
-	<zookeeper.version>2.7.0</zookeeper.version>
-	<mahout.version>2.7.0</mahout.version>
-	<hbase.version>2.7.0</hbase.version>
+	<hadoop.version>2.4.1</hadoop.version>
+    <project.version>0.0.1-SNAPSHOT</project.version>
   </properties>
 
   <dependencies>
@@ -55,5 +52,7 @@
     <module>exercise-hadoop-mahout</module>
     <module>exercise-hadoop-mr</module>
     <module>exercise-hadoop-zookeeper</module>
+    <module>exercise-hadoop-utils</module>
+    <module>exercise-hadoop-hdfs</module>
   </modules>
 </project>
