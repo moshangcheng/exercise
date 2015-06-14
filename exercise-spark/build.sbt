@@ -1,4 +1,4 @@
-val sparkVersion = "1.3.1"
+val sparkVersion = "1.4.0"
 
 lazy val commonSettings = Seq(
   organization := "me.shu.exercise.spark",
