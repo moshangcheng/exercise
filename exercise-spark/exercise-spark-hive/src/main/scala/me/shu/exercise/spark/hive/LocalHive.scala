@@ -1,13 +1,17 @@
 package me.shu.exercise.spark.hive
 
 import me.shu.exercise.spark.util.Utils
-import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.sql.hive.ClosableHiveContext
+import org.apache.spark.{SparkConf, SparkContext}
+
+
+
 
 /**
  * Created by moshangcheng on 2015/6/10.
  */
 object LocalHive {
+
 
   def main(args: Array[String]): Unit = {
 
@@ -33,8 +37,14 @@ object LocalHive {
       hc.sql("show partitions partitioned_table").foreach(println)
     }
 
+    {
+      hc.udf.register("hasAV", (x: String) => x.contains("av"))
+      hc.sql("select * from normal_table where hasAV(lang)").foreach(println)
+    }
+
+
+    new ClosableHiveContext(hc).close()
     sc.stop()
 
   }
-
 }

@@ -7,3 +7,5 @@ target/
 .idea_modules
 *.iml
 derby.log
+.ipynb_checkpoints/
+*.pyc

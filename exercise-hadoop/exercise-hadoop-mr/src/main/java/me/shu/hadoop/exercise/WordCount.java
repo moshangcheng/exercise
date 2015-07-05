@@ -45,7 +45,7 @@ public class WordCount {
 
     public static void main(String[] args) throws Exception {
 
-        Utils.initializeHadoop();
+//        Utils.initializeHadoop();
 
         JobConf conf = new JobConf(WordCount.class);
         conf.setJobName("wordcount");
