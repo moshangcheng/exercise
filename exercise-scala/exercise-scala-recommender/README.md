@@ -21,16 +21,19 @@
 
 ## 基本流程
 
-1. 根据Pearson相似度公式，计算训练数据集中物品的相似度
-2. 使用物品的相似度文件，预测用户对未购买商品的评分
-3. 对比预测评分和测试集的用户评分数据，计算两者的RMSE；计算RMSE时，只考虑测试集中出现的评分项
+1. 根据Pearson相似度公式，计算训练数据集中物品的相似度，参考类为`SimilarityCalculator`
+2. 使用物品的相似度文件，预测用户对未购买商品的评分，参考类为`Predictor`
+3. 对比预测评分和测试集的用户评分数据，计算两者的RMSE；计算RMSE时，只考虑测试集中出现的评分项，参考类为`Evaluator`
 
 ## 数据集说明
 
 - 使用[MovieLens](http://grouplens.org/datasets/movielens/)的数据作为训练数据集和测试数据集
 - 使用最小的100k数据集
 - 数据的格式为用户ID、物品ID、评分等，详细的格式参考网站文档
+- 输入数据、中间结果都在当前目录的`data`子目录中
 
 ## 其它
 
-工程使用`sbt`进行管理，在命令行里运行`sbt compile`进行编译
+- 工程使用`sbt`进行管理，在命令行里运行`sbt compile`进行编译
+- 推荐使用`intellij IDEA`进行开发，最新版的`intellij IDEA`免费版安装Scala插件后可以直接导入`sbt`工程
+- `SimilarityCalculator`、`Predictor`和`Evaluator`都是可以运行的，具体的实现待填充
