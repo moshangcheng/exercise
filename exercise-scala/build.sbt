@@ -8,7 +8,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val exerciseScala = (project in file(".")).
-  aggregate(exerciseScalaBasic).
+  aggregate(exerciseScalaBasic, exerciseScalaRecommender).
   settings(commonSettings: _*).
   settings(
     name := "exercise-scala"
@@ -20,3 +20,8 @@ lazy val exerciseScalaBasic = (project in file("exercise-scala-basic")).
     name := "exercise-scala-basic"
   )
 
+lazy val exerciseScalaRecommender = (project in file("exercise-scala-recommender")).
+  settings(commonSettings: _*).
+  settings(
+    name := "exercise-scala-recommender"
+  )
