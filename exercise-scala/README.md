@@ -11,6 +11,7 @@
 - [Scala基础练习](./exercise-scala-basic)
 - [A Scala Tutorial for Java Programmers 笔记](./A-Scala-Tutorial-for-Java-Programmers-notes.md)
 - [sbt学习笔记](./sbt.md)
+- [推荐系统练习](./exercise-scala-recommender)
 
 ## 任务
 
