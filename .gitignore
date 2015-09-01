@@ -9,3 +9,4 @@ target/
 derby.log
 .ipynb_checkpoints/
 *.pyc
+hdfs-root

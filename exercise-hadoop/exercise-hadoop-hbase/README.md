@@ -10,6 +10,8 @@
 
 测试发现只能在Linux上运行
 
+另外，[HBase不支持embadded模式](https://issues.apache.org/jira/browse/HBASE-8016)
+
 ## HBase Shell命令
 
 `list`，显示所有表；`list 't.*'`显示所有以`t`开头的字符串
@@ -19,6 +21,8 @@
 `desc 't'`，获得一个表的描述信息
 
 `create 't', 'cf1', 'cf2'`，创建一个有两个列族的表
+
+`scan 't', {LIMIT => 10}`，扫描表中10条记录
 
 
 
