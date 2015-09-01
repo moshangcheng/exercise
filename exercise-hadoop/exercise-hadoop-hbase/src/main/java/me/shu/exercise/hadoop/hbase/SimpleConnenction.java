@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class SimpleConnenction {
 
-    // ÉùÃ÷¾²Ì¬ÅäÖÃ
+    // å£°æ˜é™æ€é…ç½®
     static Configuration conf = null;
     static {
         conf = HBaseConfiguration.create();
@@ -23,11 +23,11 @@ public class SimpleConnenction {
     }
 
     /*
-     * ´´½¨±í
+     * åˆ›å»ºè¡¨
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
-     * @family ÁĞ×åÁĞ±í
+     * @family åˆ—æ—åˆ—è¡¨
      */
     public static void creatTable(String tableName, String[] family)
             throws Exception {
@@ -46,38 +46,38 @@ public class SimpleConnenction {
     }
 
     /*
-     * Îª±íÌí¼ÓÊı¾İ£¨ÊÊºÏÖªµÀÓĞ¶àÉÙÁĞ×åµÄ¹Ì¶¨±í£©
+     * ä¸ºè¡¨æ·»åŠ æ•°æ®ï¼ˆé€‚åˆçŸ¥é“æœ‰å¤šå°‘åˆ—æ—çš„å›ºå®šè¡¨ï¼‰
      *
      * @rowKey rowKey
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
-     * @column1 µÚÒ»¸öÁĞ×åÁĞ±í
+     * @column1 ç¬¬ä¸€ä¸ªåˆ—æ—åˆ—è¡¨
      *
-     * @value1 µÚÒ»¸öÁĞµÄÖµµÄÁĞ±í
+     * @value1 ç¬¬ä¸€ä¸ªåˆ—çš„å€¼çš„åˆ—è¡¨
      *
-     * @column2 µÚ¶ş¸öÁĞ×åÁĞ±í
+     * @column2 ç¬¬äºŒä¸ªåˆ—æ—åˆ—è¡¨
      *
-     * @value2 µÚ¶ş¸öÁĞµÄÖµµÄÁĞ±í
+     * @value2 ç¬¬äºŒä¸ªåˆ—çš„å€¼çš„åˆ—è¡¨
      */
     public static void addData(String rowKey, String tableName,
                                String[] column1, String[] value1, String[] column2, String[] value2)
             throws IOException {
-        Put put = new Put(Bytes.toBytes(rowKey));// ÉèÖÃrowkey
-        HTable table = new HTable(conf, Bytes.toBytes(tableName));// HTabel¸ºÔğ¸ú¼ÇÂ¼Ïà¹ØµÄ²Ù×÷ÈçÔöÉ¾¸Ä²éµÈ//
-        // »ñÈ¡±í
-        HColumnDescriptor[] columnFamilies = table.getTableDescriptor() // »ñÈ¡ËùÓĞµÄÁĞ×å
+        Put put = new Put(Bytes.toBytes(rowKey));// è®¾ç½®rowkey
+        HTable table = new HTable(conf, Bytes.toBytes(tableName));// HTabelè´Ÿè´£è·Ÿè®°å½•ç›¸å…³çš„æ“ä½œå¦‚å¢åˆ æ”¹æŸ¥ç­‰//
+        // è·å–è¡¨
+        HColumnDescriptor[] columnFamilies = table.getTableDescriptor() // è·å–æ‰€æœ‰çš„åˆ—æ—
                 .getColumnFamilies();
 
         for (int i = 0; i < columnFamilies.length; i++) {
-            String familyName = columnFamilies[i].getNameAsString(); // »ñÈ¡ÁĞ×åÃû
-            if (familyName.equals("article")) { // articleÁĞ×åputÊı¾İ
+            String familyName = columnFamilies[i].getNameAsString(); // è·å–åˆ—æ—å
+            if (familyName.equals("article")) { // articleåˆ—æ—putæ•°æ®
                 for (int j = 0; j < column1.length; j++) {
                     put.add(Bytes.toBytes(familyName),
                             Bytes.toBytes(column1[j]), Bytes.toBytes(value1[j]));
                 }
             }
-            if (familyName.equals("author")) { // authorÁĞ×åputÊı¾İ
+            if (familyName.equals("author")) { // authoråˆ—æ—putæ•°æ®
                 for (int j = 0; j < column2.length; j++) {
                     put.add(Bytes.toBytes(familyName),
                             Bytes.toBytes(column2[j]), Bytes.toBytes(value2[j]));
@@ -89,16 +89,16 @@ public class SimpleConnenction {
     }
 
     /*
-     * ¸ù¾İrwokey²éÑ¯
+     * æ ¹æ®rwokeyæŸ¥è¯¢
      *
      * @rowKey rowKey
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      */
     public static Result getResult(String tableName, String rowKey)
             throws IOException {
         Get get = new Get(Bytes.toBytes(rowKey));
-        HTable table = new HTable(conf, Bytes.toBytes(tableName));// »ñÈ¡±í
+        HTable table = new HTable(conf, Bytes.toBytes(tableName));// è·å–è¡¨
         Result result = table.get(get);
         for (KeyValue kv : result.list()) {
             System.out.println("family:" + Bytes.toString(kv.getFamily()));
@@ -112,9 +112,9 @@ public class SimpleConnenction {
     }
 
     /*
-     * ±éÀú²éÑ¯hbase±í
+     * éå†æŸ¥è¯¢hbaseè¡¨
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      */
     public static void getResultScann(String tableName) throws IOException {
         Scan scan = new Scan();
@@ -142,9 +142,9 @@ public class SimpleConnenction {
     }
 
     /*
-     * ±éÀú²éÑ¯hbase±í
+     * éå†æŸ¥è¯¢hbaseè¡¨
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      */
     public static void getResultScann(String tableName, String start_rowkey,
                                       String stop_rowkey) throws IOException {
@@ -175,9 +175,9 @@ public class SimpleConnenction {
     }
 
     /*
-     * ²éÑ¯±íÖĞµÄÄ³Ò»ÁĞ
+     * æŸ¥è¯¢è¡¨ä¸­çš„æŸä¸€åˆ—
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
      * @rowKey rowKey
      */
@@ -185,7 +185,7 @@ public class SimpleConnenction {
                                          String familyName, String columnName) throws IOException {
         HTable table = new HTable(conf, Bytes.toBytes(tableName));
         Get get = new Get(Bytes.toBytes(rowKey));
-        get.addColumn(Bytes.toBytes(familyName), Bytes.toBytes(columnName)); // »ñÈ¡Ö¸¶¨ÁĞ×åºÍÁĞĞŞÊÎ·û¶ÔÓ¦µÄÁĞ
+        get.addColumn(Bytes.toBytes(familyName), Bytes.toBytes(columnName)); // è·å–æŒ‡å®šåˆ—æ—å’Œåˆ—ä¿®é¥°ç¬¦å¯¹åº”çš„åˆ—
         Result result = table.get(get);
         for (KeyValue kv : result.list()) {
             System.out.println("family:" + Bytes.toString(kv.getFamily()));
@@ -198,17 +198,17 @@ public class SimpleConnenction {
     }
 
     /*
-     * ¸üĞÂ±íÖĞµÄÄ³Ò»ÁĞ
+     * æ›´æ–°è¡¨ä¸­çš„æŸä¸€åˆ—
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
      * @rowKey rowKey
      *
-     * @familyName ÁĞ×åÃû
+     * @familyName åˆ—æ—å
      *
-     * @columnName ÁĞÃû
+     * @columnName åˆ—å
      *
-     * @value ¸üĞÂºóµÄÖµ
+     * @value æ›´æ–°åçš„å€¼
      */
     public static void updateTable(String tableName, String rowKey,
                                    String familyName, String columnName, String value)
@@ -222,15 +222,15 @@ public class SimpleConnenction {
     }
 
     /*
-     * ²éÑ¯Ä³ÁĞÊı¾İµÄ¶à¸ö°æ±¾
+     * æŸ¥è¯¢æŸåˆ—æ•°æ®çš„å¤šä¸ªç‰ˆæœ¬
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
      * @rowKey rowKey
      *
-     * @familyName ÁĞ×åÃû
+     * @familyName åˆ—æ—å
      *
-     * @columnName ÁĞÃû
+     * @columnName åˆ—å
      */
     public static void getResultByVersion(String tableName, String rowKey,
                                           String familyName, String columnName) throws IOException {
@@ -255,15 +255,15 @@ public class SimpleConnenction {
     }
 
     /*
-     * É¾³ıÖ¸¶¨µÄÁĞ
+     * åˆ é™¤æŒ‡å®šçš„åˆ—
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
      * @rowKey rowKey
      *
-     * @familyName ÁĞ×åÃû
+     * @familyName åˆ—æ—å
      *
-     * @columnName ÁĞÃû
+     * @columnName åˆ—å
      */
     public static void deleteColumn(String tableName, String rowKey,
                                     String falilyName, String columnName) throws IOException {
@@ -276,9 +276,9 @@ public class SimpleConnenction {
     }
 
     /*
-     * É¾³ıÖ¸¶¨µÄÁĞ
+     * åˆ é™¤æŒ‡å®šçš„åˆ—
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      *
      * @rowKey rowKey
      */
@@ -291,9 +291,9 @@ public class SimpleConnenction {
     }
 
     /*
-     * É¾³ı±í
+     * åˆ é™¤è¡¨
      *
-     * @tableName ±íÃû
+     * @tableName è¡¨å
      */
     public static void deleteTable(String tableName) throws IOException {
         HBaseAdmin admin = new HBaseAdmin(conf);
@@ -304,12 +304,12 @@ public class SimpleConnenction {
 
     public static void main(String[] args) throws Exception {
 
-        // ´´½¨±í
+        // åˆ›å»ºè¡¨
         String tableName = "blog2";
         String[] family = { "article", "author" };
         creatTable(tableName, family);
 
-        // Îª±íÌí¼ÓÊı¾İ
+        // ä¸ºè¡¨æ·»åŠ æ•°æ®
 
         String[] column1 = { "title", "content", "tag" };
         String[] value1 = {
@@ -322,33 +322,33 @@ public class SimpleConnenction {
         addData("rowkey2", "blog2", column1, value1, column2, value2);
         addData("rowkey3", "blog2", column1, value1, column2, value2);
 
-        // ±éÀú²éÑ¯
+        // éå†æŸ¥è¯¢
         getResultScann("blog2", "rowkey4", "rowkey5");
-        // ¸ù¾İrow key·¶Î§±éÀú²éÑ¯
+        // æ ¹æ®row keyèŒƒå›´éå†æŸ¥è¯¢
         getResultScann("blog2", "rowkey4", "rowkey5");
 
-        // ²éÑ¯
+        // æŸ¥è¯¢
         getResult("blog2", "rowkey1");
 
-        // ²éÑ¯Ä³Ò»ÁĞµÄÖµ
+        // æŸ¥è¯¢æŸä¸€åˆ—çš„å€¼
         getResultByColumn("blog2", "rowkey1", "author", "name");
 
-        // ¸üĞÂÁĞ
+        // æ›´æ–°åˆ—
         updateTable("blog2", "rowkey1", "author", "name", "bin");
 
-        // ²éÑ¯Ä³Ò»ÁĞµÄÖµ
+        // æŸ¥è¯¢æŸä¸€åˆ—çš„å€¼
         getResultByColumn("blog2", "rowkey1", "author", "name");
 
-        // ²éÑ¯Ä³ÁĞµÄ¶à°æ±¾
+        // æŸ¥è¯¢æŸåˆ—çš„å¤šç‰ˆæœ¬
         getResultByVersion("blog2", "rowkey1", "author", "name");
 
-        // É¾³ıÒ»ÁĞ
+        // åˆ é™¤ä¸€åˆ—
         deleteColumn("blog2", "rowkey1", "author", "nickname");
 
-        // É¾³ıËùÓĞÁĞ
+        // åˆ é™¤æ‰€æœ‰åˆ—
         deleteAllColumn("blog2", "rowkey1");
 
-        // É¾³ı±í
+        // åˆ é™¤è¡¨
         deleteTable("blog2");
 
     }
