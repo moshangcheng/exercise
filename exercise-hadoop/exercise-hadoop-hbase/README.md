@@ -24,11 +24,25 @@
 
 `scan 't', {LIMIT => 10}`，扫描表中10条记录
 
+导出HBase表的数据到HDFS
 
+```
+hbase org.apache.hadoop.hbase.mapreduce.Export <tablename> <outputdir>
+```
+
+从HDFS导入数据到HBase
+
+```
+hbase org.apache.hadoop.hbase.mapreduce.Import <tablename> <inputdir>
+```
+
+参考资料
+
+- [http://stackoverflow.com/questions/25909132/how-to-import-export-hbase-data-via-hdfs-hadoop-commands](http://stackoverflow.com/questions/25909132/how-to-import-export-hbase-data-via-hdfs-hadoop-commands)
 
 ## 参考资料
 
-- [HBase Quick Start](http://hbase.apache.org/0.94/book/quickstart.html) 
+- [HBase Quick Start](http://hbase.apache.org/0.94/book/quickstart.html)
 - [HBase shell commands](https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/)
 - [HBase MapReduce Examples](http://hbase.apache.org/0.94/book/mapreduce.example.html)
 - [HBase coprocessor introduction](https://blogs.apache.org/hbase/entry/coprocessor_introduction)
