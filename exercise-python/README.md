@@ -8,7 +8,8 @@
 
 推荐使用[*Anaconda*](https://store.continuum.io/cshop/anaconda/)等Python第三方发行版
 
-- [python tutorial 笔记](./python-tutorial-notes.md)
+- [python tutorial 笔记](./python-tutorial-notes.ipynb)
+- [python的编码问题](./python-encoding.md)
 
 ### 使用的第三方包
 
