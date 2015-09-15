@@ -68,7 +68,7 @@ print '中国'
 - 保存为`UTF-8`编码
 	- `x.py`为`UTF-8`编码，运行出错`SyntaxError: Non-ASCII character '\xe4' in file x.py `
 	- `x.py`为带BOM的`UTF-8`编码，windows上运行结果为`涓浗`，Linux上运行结果为`中国`
-	- `x.py`为`UTF-8`编码，windows上运行结果为`涓浗`，Linux上运行结果为`中国`
+	- `x.py`为`UTF-8`编码，并加上`# -*- coding: utf-8 -*-`声明，windows上运行结果为`涓浗`，Linux上运行结果为`中国`
 - 保存为`ASCII`编码，实际是native编码，由系统决定
 	- `x.py`为`ASCII`编码，运行出错`SyntaxError: Non-ASCII character '\xd6' in file x.py`
 	- `x.py`为`ASCII`编码，并加上`# -*- coding: utf-8 -*-`声明，运行结果为`中国`
@@ -89,7 +89,7 @@ print u'中国'
 - 保存为`UTF-8`编码
 	- `x.py`为`UTF-8`编码，运行出错`SyntaxError: Non-ASCII character '\xe4' in file x.py `
 	- `x.py`为带BOM的`UTF-8`编码，运行结果为`中国`
-	- `x.py`为`UTF-8`编码，运行结果为`中国`
+	- `x.py`为`UTF-8`编码，并加上`# -*- coding: utf-8 -*-`声明，运行结果为`中国`
 - 保存为`ASCII`编码，实际是native编码，由系统决定
 	- `x.py`为`ASCII`编码，运行出错`SyntaxError: Non-ASCII character '\xd6' in file x.py`
 	- `x.py`为`ASCII`编码，并加上`# -*- coding: utf-8 -*-`声明，运行出错`SyntaxError: (unicode error) 'utf8' codec can't decode byte 0xd6 `
