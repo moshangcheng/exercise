@@ -6,7 +6,7 @@ Python中用`str`类型表示原始字节，用`unicode`类型表示字符
 - `unicode.encode`将`unicode`转换为`str`
 - `str`中的编码类型由调用者决定
 - 执行`str('a') + u'b'`，会对`str('a')`自动转换为`unicode`类型，并且使用默认的`ASCII`编码进行解码
-- 因此`str('中国') + u'b'`会执行事变，因为`'中国'`不是ASCII字符
+- 因此`str('中国') + u'b'`会执行失败，因为`'中国'`不是ASCII字符
 
 ## 场景一
 
