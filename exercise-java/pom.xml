@@ -48,6 +48,8 @@
 
   <modules>
     <module>exercise-java-mockito</module>
+    <module>exercise-java-log4j</module>
+    <module>exercise-java-maven</module>
   </modules>
   
 </project>
