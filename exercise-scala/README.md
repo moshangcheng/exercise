@@ -2,16 +2,22 @@
 
 ## 介绍
 
-项目使用`sbt`管理，包含多个子工程，使用`scalatest`进行单元测试，使用`sbt-assembly` 进行打包，使用`sbt-eclipse`生成eclispe工程。
+项目使用`sbt`管理，包含多个子工程，使用`scalatest`进行单元测试，使用`sbt-assembly` 进行打包。
 
-项目使用[Scala-ide](http://scala-ide.org/)作为开发工具。
+推荐使用`intellij IDEA`作为开发工具。
 
 ## 内容
 
+代码
+
 - [Scala基础练习](./exercise-scala-basic)
-- [A Scala Tutorial for Java Programmers 笔记](./A-Scala-Tutorial-for-Java-Programmers-notes.md)
-- [sbt学习笔记](./sbt.md)
 - [推荐系统练习](./exercise-scala-recommender)
+
+文档
+
+- [sbt笔记](./sbt.md)
+- [activator笔记](./activator.md)
+- [A Scala Tutorial for Java Programmers 笔记](./A-Scala-Tutorial-for-Java-Programmers-notes.md)
 
 ## 任务
 

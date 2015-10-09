@@ -6,6 +6,11 @@
 
 在任何目录下运行 `sbt` 命令进入 `sbt REPL`。
 
+指定`sbt`的本地库路径
+
+- 对于命令行而言，修改`conf/sbtopts`文件，添加`-ivy /D/.ivy2`
+- 对于`intellij IDEA`来说，给`sbt`添加VM参数`-Dsbt.ivy.home=D:/.ivy2`
+
 ## 目录结构
 
 在 sbt 的术语里，“基础目录”是包含项目的目录，sbt 的源文件目录结构如下所示， 和 maven 的目录结构相同。
