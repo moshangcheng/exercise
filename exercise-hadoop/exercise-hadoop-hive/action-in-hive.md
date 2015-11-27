@@ -10,3 +10,6 @@
 	- 解决方案
 		- 使用`to_unix_timestamp`代替
 		- [Hive-3853](https://issues.apache.org/jira/browse/HIVE-3853)和[Hive-1986](https://issues.apache.org/jira/browse/HIVE-1986)
+- Hive的`join`
+	- 尽量先过滤，在join，这样不管是inner join还是outer join，都不会有问题
+	- 对于outer join，如果先join，再过滤，结果是不正确的
