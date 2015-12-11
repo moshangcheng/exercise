@@ -8,7 +8,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val exerciseScala = (project in file(".")).
-  aggregate(exerciseScalaBasic, exerciseScalaRecommender, exerciseScalaTianchi).
+  aggregate(exerciseScalaBasic, exerciseScalaRecommender, exerciseScalaTianchi, exerciseScalaBreeze).
   settings(commonSettings: _*).
   settings(
     name := "exercise-scala"
@@ -30,4 +30,12 @@ lazy val exerciseScalaTianchi = (project in file("exercise-scala-tianchi")).
   settings(commonSettings: _*).
   settings(
     name := "exercise-scala-tianchi"
+  )
+
+lazy val exerciseScalaBreeze = (project in file("exercise-scala-breeze")).
+  settings(commonSettings: _*).
+  settings(
+    name := "exercise-scala-breeze",
+      //libraryDependencies += ("org.scalanlp" % "breeze-natives_2.10" % "0.11.2")
+      libraryDependencies += "org.scalanlp" % "breeze_2.10" % "0.11.2"
   )

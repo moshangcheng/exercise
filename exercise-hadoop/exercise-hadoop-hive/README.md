@@ -6,6 +6,7 @@
 
 - [Hive实践](./action-in-hive.md)
 - [Hive执行计划](./explain-in-hive.md)
+- [Hive UDF](./udf.md)
 
 ## Hive shell命令
 
