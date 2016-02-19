@@ -30,10 +30,35 @@
 hbase org.apache.hadoop.hbase.mapreduce.Export <tablename> <outputdir>
 ```
 
+注意，`start`参数和`stop`参数是字符串类型
+
+```
+table_name='test'
+
+hbase org.apache.hadoop.hbase.mapreduce.Export -D hbase.mapreduce.scan.row.start='0' -D hbase.mapreduce.scan.row.stop='11' ${table_name} /tmp/${table_name}
+hdfs dfs -get /tmp/${table_name} ./${table_name}
+tar cf ${table_name}.tar ./${table_name}
+
+hdfs dfs -rm -r /tmp/${table_name}
+rm -rf ./${table_name}
+```
+
 从HDFS导入数据到HBase
 
 ```
 hbase org.apache.hadoop.hbase.mapreduce.Import <tablename> <inputdir>
+```
+
+```
+table_name='test'
+
+tar xf ${table_name}.tar ./${table_name}
+hdfs dfs -put ./${table_name} /tmp/${table_name}
+hbase org.apache.hadoop.hbase.mapreduce.Import ${table_name} /tmp/${table_name}
+
+hdfs dfs -rm -r /tmp/${table_name}
+rm -rf ./${table_name}
+rm -f ${table_name}.tar
 ```
 
 参考资料
