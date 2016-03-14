@@ -16,3 +16,13 @@
 - [Hive-11271 java.lang.IndexOutOfBoundsException when union all](https://issues.apache.org/jira/browse/HIVE-11271)
 	- `union all`的表中如果有条件查询，可能会出现数组越界异常
 	- 规避方案是关闭下推优化`set hive.optimize.ppd=false;`
+- [HIVE-6758 Beeline doesn't work with -e option when started in background](https://issues.apache.org/jira/browse/HIVE-6758)
+	- 解决方案，修改`beeline`启动脚本
+
+	```
+	if [[ ! $(ps -o stat= -p $$) =~ "+" ]]; then
+	  exec "$FWDIR/bin/spark-class" -Djline.terminal=jline.UnsupportedTerminal $CLASS "$@"
+	else
+	  exec "$FWDIR/bin/spark-class" $CLASS "$@"
+	fi
+	```
