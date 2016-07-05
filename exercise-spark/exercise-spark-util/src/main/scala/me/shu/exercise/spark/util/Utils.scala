@@ -29,7 +29,7 @@ object Utils {
 
   def createHiveContext(sc: SparkContext): HiveContext = {
     if (Properties.isWin) {
-      val hiveRoot = "D:/data/hive-root"
+      val hiveRoot = System.getProperty("user.dir") + "/hdfs/hive"
       System.setProperty("hive.metastore.warehouse.dir", hiveRoot + "/warehouse")
       System.setProperty("hive.exec.scratchdir", hiveRoot + "/scratchdir")
       System.setProperty("javax.jdo.option.ConnectionURL", "jdbc:derby:;databaseName=" + hiveRoot + "/metadb;create=true")

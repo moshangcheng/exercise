@@ -1,4 +1,4 @@
-val sparkVersion = "1.5.1"
+val sparkVersion = "1.6.1"
 
 lazy val commonSettings = Seq(
   organization := "me.shu.exercise.spark",
@@ -52,7 +52,8 @@ lazy val exerciseSparkSQL = (project in file("exercise-spark-sql")).
   dependsOn(exerciseSparkUtil).
   settings(commonSettings: _*).
   settings(
-    name := "exercise-spark-sql"
+    name := "exercise-spark-sql",
+    libraryDependencies += "com.typesafe.play" % "play-ws_2.10" % "2.4.6"
   )
   
 lazy val exerciseSparkStreaming = (project in file("exercise-spark-streaming")).
